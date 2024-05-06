@@ -1,0 +1,6 @@
+{
+    "window.zoomLevel": 0.1,
+    "editor.mouseWheelZoom": true,
+    "customWindowZoom.zoomLevelChangeValue": 0.1,
+    "zoomer.zoomIncrement": 0.2
+}
