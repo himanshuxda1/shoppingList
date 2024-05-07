@@ -58,22 +58,28 @@ onValue(shoppingListInDB, function (snapshot) {
 
             })
 
-            let timeOutId;
-            let holdTime = 1000;
-
-            li.addEventListener("mousedown", function () {
-                timeOutId = setTimeout(function () {
-                    console.log(itemID)
-                    let exactLocation = ref(database, "shoppingList/" + itemID)
-                    remove(exactLocation);
-                }, holdTime);
-
+            li.addEventListener("dblclick", function(){
+                console.log(itemID)
+                let exactLocation = ref(database, "shoppingList/" + itemID)
+                remove(exactLocation);                
             })
 
+            // let timeOutId;
+            // let holdTime = 1000;
 
-            li.addEventListener("mouseup", function () {
-                clearTimeout(timeOutId); // Clear the timeout if mouse is released before holdTime
-            });
+            // li.addEventListener("", function () {
+            //     timeOutId = setTimeout(function () {
+            //         console.log(itemID)
+            //         let exactLocation = ref(database, "shoppingList/" + itemID)
+            //         remove(exactLocation);
+            //     }, holdTime);
+
+            // })
+
+
+            // li.addEventListener("mouseup", function () {
+            //     clearTimeout(timeOutId); // Clear the timeout if mouse is released before holdTime
+            // });
     
             
         })
