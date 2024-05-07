@@ -21,28 +21,36 @@ addButtonEl.addEventListener("click", function () {
 // Append list item to ul
 function addListItem() {
     const inputFieldText = inputFieldEl.value;
+    if(inputFieldText != null && inputFieldText != ""){
     push(shoppingListInDB, inputFieldText)
+    }
 }
 
 onValue(shoppingListInDB, function (snapshot) {
     list.innerHTML = "";
-    let items = Object.entries(snapshot.val());
-    console.log(items);
-    items.map((item) => {
-        let li = document.createElement("li");
-        li.setAttribute("class", "listItem")
-        let itemID = item[0];
-        let itemValue = item[1];
-        li.innerText = itemValue;
-        list.append(li);
-
-
-        li.addEventListener("click", function () {
-                console.log(itemID)
-                let exactLocation = ref(database, "shoppingList/" + itemID)
-                remove(exactLocation);
+    if(snapshot.exists()){
+        let items = Object.entries(snapshot.val());
+        console.log(items);
+        items.map((item) => {
+            let li = document.createElement("li");
+            li.setAttribute("class", "listItem")
+            let itemID = item[0];
+            let itemValue = item[1];
+            li.innerText = itemValue;
+            list.append(li);
+    
+    
+            li.addEventListener("click", function () {
+                    console.log(itemID)
+                    let exactLocation = ref(database, "shoppingList/" + itemID)
+                    remove(exactLocation);
+            })
         })
-    })
+        
+    } else {
+        list.innerHTML += `<li>No items Added Yet...</li>` 
+
+    }
 })
 
 // clear input field
