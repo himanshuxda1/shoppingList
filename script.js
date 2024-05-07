@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://realtime-database-e9f3c-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -21,14 +21,14 @@ addButtonEl.addEventListener("click", function () {
 // Append list item to ul
 function addListItem() {
     const inputFieldText = inputFieldEl.value;
-    if(inputFieldText != null && inputFieldText != ""){
-    push(shoppingListInDB, inputFieldText)
+    if (inputFieldText != null && inputFieldText != "") {
+        push(shoppingListInDB, inputFieldText)
     }
 }
 
 onValue(shoppingListInDB, function (snapshot) {
     list.innerHTML = "";
-    if(snapshot.exists()){
+    if (snapshot.exists()) {
         let items = Object.entries(snapshot.val());
         console.log(items);
         items.map((item) => {
@@ -36,19 +36,50 @@ onValue(shoppingListInDB, function (snapshot) {
             li.setAttribute("class", "listItem")
             let itemID = item[0];
             let itemValue = item[1];
-            li.innerText = itemValue;
+            li.innerText = textFixXl1(itemValue);
+            if(itemValue.slice(-3) == "xl1"){
+                li.setAttribute("class", "listItemCheck")
+            } else {
+                li.setAttribute("class", "listItem")
+            }
             list.append(li);
-    
-    
+
+            // This applis/removes xl1
             li.addEventListener("click", function () {
+                console.log(itemID);
+                let exactLocation = ref(database, "shoppingList/" + itemID)
+                let checker = itemValue.slice(-3)
+                if (checker === "xl1") {
+                    set(exactLocation, itemValue.slice(0, -3))
+                } else {
+                    set(exactLocation, itemValue + "xl1")
+
+                }
+
+            })
+
+            let timeOutId;
+            let holdTime = 1000;
+
+            li.addEventListener("mousedown", function () {
+                timeOutId = setTimeout(function () {
                     console.log(itemID)
                     let exactLocation = ref(database, "shoppingList/" + itemID)
                     remove(exactLocation);
+                }, holdTime);
+
             })
+
+
+            li.addEventListener("mouseup", function () {
+                clearTimeout(timeOutId); // Clear the timeout if mouse is released before holdTime
+            });
+    
+            
         })
-        
+
     } else {
-        list.innerHTML += `<li>No items Added Yet...</li>` 
+        list.innerHTML += `<li>No items Added Yet...</li>`
 
     }
 })
@@ -58,4 +89,12 @@ function clearInput() {
     inputFieldEl.value = ""
 }
 
+
+function textFixXl1(itemValue){
+    if(itemValue.slice(-3) == "xl1"){
+        return(itemValue.slice(0,-3));
+    } else {
+        return itemValue
+    }
+}
 
