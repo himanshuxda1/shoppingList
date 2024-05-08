@@ -90,6 +90,7 @@ ul{
 
 .listItemCheck{
     flex-grow: 1;
+    text-decoration: line-through;
     user-select: none;
     color: white;
     background-color: #1a800a;
